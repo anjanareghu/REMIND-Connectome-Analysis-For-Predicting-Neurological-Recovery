@@ -5,7 +5,7 @@
 ### ✅ Step 1: Revoke the Exposed API Key (DO THIS FIRST!)
 
 1. **Go to Google Cloud Console:** https://console.cloud.google.com/apis/credentials
-2. **Find the API key:** `AIzaSyCmpr-ZwjFkLTy8UC0rCAZZOVLsFaxItZU`
+2. **Find the API key that was exposed** (it will be listed in your credentials)
 3. **DELETE or RESTRICT it immediately** to prevent unauthorized usage
 4. **Monitor your usage** for any unexpected API calls
 
