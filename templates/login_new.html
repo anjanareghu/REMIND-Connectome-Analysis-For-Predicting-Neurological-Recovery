@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Health Management - Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .auth-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+            overflow: hidden;
+            width: 450px;
+            max-width: 95%;
+        }
+
+        .auth-header {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .auth-header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .auth-header p {
+            font-size: 16px;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .auth-content {
+            padding: 40px 30px;
+        }
+
+        .form-section {
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #4CAF50;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 16px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(76, 175, 80, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-register {
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+        }
+
+        .btn-register:hover {
+            box-shadow: 0 10px 20px rgba(33, 150, 243, 0.3);
+        }
+
+        .error {
+            color: #f44336;
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #f44336;
+            font-weight: 500;
+            display: none;
+        }
+
+        .success {
+            color: #4CAF50;
+            background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #4CAF50;
+            font-weight: 500;
+            display: none;
+        }
+
+        .auth-switch {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 1px solid #e1e5e9;
+        }
+
+        .auth-switch p {
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .switch-link {
+            color: #4CAF50;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: inline-block;
+            border: 2px solid #4CAF50;
+            background: transparent;
+        }
+
+        .switch-link:hover {
+            background: #4CAF50;
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            color: #666;
+            font-style: italic;
+        }
+
+        .form-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .form-subtitle {
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .password-requirements {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+            line-height: 1.4;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .brand-icon {
+            font-size: 32px;
+            margin-right: 10px;
+        }
+
+        @media (max-width: 480px) {
+            .auth-container {
+                width: 100%;
+                margin: 10px;
+            }
+            
+            .auth-header {
+                padding: 30px 20px;
+            }
+            
+            .auth-content {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-header">
+            <div class="brand">
+                <span class="brand-icon">🧠</span>
+                <div>
+                    <h1>AI Health Management</h1>
+                    <p>Your intelligent health companion</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="auth-content">
+            <div id="errorMessage" class="error"></div>
+            <div id="successMessage" class="success"></div>
+            <div id="loadingMessage" class="loading">Processing...</div>
+            
+            <!-- Login Form -->
+            <div id="loginSection" class="form-section active">
+                <div class="form-title">Welcome Back</div>
+                <div class="form-subtitle">Sign in to access your health dashboard</div>
+                
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginUsername">Username</label>
+                        <input type="text" id="loginUsername" name="username" required placeholder="Enter your username">
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" name="password" required placeholder="Enter your password">
+                    </div>
+                    <button type="submit" class="btn">Sign In</button>
+                </form>
+                
+                <div class="auth-switch">
+                    <p>Don't have an account?</p>
+                    <a href="#" class="switch-link" onclick="showRegister()">Click here to register</a>
+                </div>
+            </div>
+
+            <!-- Register Form -->
+            <div id="registerSection" class="form-section">
+                <div class="form-title">Create Account</div>
+                <div class="form-subtitle">Join our AI-powered health platform</div>
+                
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label for="regUsername">Username</label>
+                        <input type="text" id="regUsername" name="username" required placeholder="Choose a unique username">
+                    </div>
+                    <div class="form-group">
+                        <label for="regEmail">Email Address</label>
+                        <input type="email" id="regEmail" name="email" required placeholder="Enter your email address">
+                    </div>
+                    <div class="form-group">
+                        <label for="regPassword">Password</label>
+                        <input type="password" id="regPassword" name="password" required placeholder="Create a strong password">
+                        <div class="password-requirements">
+                            Password should be at least 8 characters long and include a mix of letters and numbers
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-register">Create Account</button>
+                </form>
+                
+                <div class="auth-switch">
+                    <p>Already have an account?</p>
+                    <a href="#" class="switch-link" onclick="showLogin()">Click here to sign in</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            document.getElementById('successMessage').style.display = 'none';
+            document.getElementById('loadingMessage').style.display = 'none';
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('loadingMessage').style.display = 'none';
+        }
+
+        function showLoading() {
+            document.getElementById('loadingMessage').style.display = 'block';
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
+        }
+
+        function hideMessages() {
+            document.getElementById('loadingMessage').style.display = 'none';
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
+        }
+
+        function showRegister() {
+            document.getElementById('loginSection').classList.remove('active');
+            document.getElementById('registerSection').classList.add('active');
+            hideMessages();
+            // Clear forms
+            document.getElementById('loginForm').reset();
+        }
+
+        function showLogin() {
+            document.getElementById('registerSection').classList.remove('active');
+            document.getElementById('loginSection').classList.add('active');
+            hideMessages();
+            // Clear forms
+            document.getElementById('registerForm').reset();
+        }
+
+        // Login form submission
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            showLoading();
+            
+            const formData = new FormData(this);
+            const loginData = {
+                username: formData.get('username'),
+                password: formData.get('password')
+            };
+            
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(loginData)
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    // Store token in localStorage
+                    localStorage.setItem('access_token', data.access_token);
+                    
+                    showSuccess('Login successful! Redirecting...');
+                    
+                    // Check if profile is completed
+                    setTimeout(() => {
+                        if (!data.profile_completed) {
+                            window.location.href = '/profile/create';
+                        } else {
+                            window.location.href = '/dashboard';
+                        }
+                    }, 1500);
+                } else {
+                    const errorData = await response.json();
+                    showError(errorData.detail || 'Login failed. Please check your credentials.');
+                }
+            } catch (error) {
+                showError('Network error. Please check your connection and try again.');
+            }
+        });
+
+        // Register form submission
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            showLoading();
+            
+            const formData = new FormData(this);
+            const registerData = {
+                username: formData.get('username'),
+                email: formData.get('email'),
+                password: formData.get('password')
+            };
+
+            // Basic validation
+            if (registerData.password.length < 8) {
+                showError('Password must be at least 8 characters long.');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(registerData)
+                });
+                
+                if (response.ok) {
+                    showSuccess('Registration successful! You can now sign in with your credentials.');
+                    document.getElementById('registerForm').reset();
+                    setTimeout(() => {
+                        showLogin();
+                    }, 2000);
+                } else {
+                    const errorData = await response.json();
+                    showError(errorData.detail || 'Registration failed. Please try again.');
+                }
+            } catch (error) {
+                showError('Network error. Please check your connection and try again.');
+            }
+        });
+
+        // Auto-focus on username field when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('loginUsername').focus();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Health Management - Create Your Profile</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Navigation Bar Styles */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            color: white;
+            font-weight: 600;
+            font-size: 20px;
+        }
+
+        .brand-icon {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+
+        .brand-text {
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-icons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-icon:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .profile-container {
+            max-width: 900px;
+            margin: 80px auto 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+
+        .profile-header {
+            background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .brand-icon {
+            font-size: 36px;
+            margin-right: 15px;
+        }
+
+        .profile-header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .profile-header p {
+            font-size: 18px;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .progress-indicator {
+            background: rgba(30, 64, 175, 0.2);
+            padding: 15px 30px;
+            text-align: center;
+            color: white;
+            font-weight: 500;
+        }
+
+        .form-container {
+            padding: 40px 30px;
+        }
+
+        .form-section {
+            margin-bottom: 40px;
+            padding: 30px;
+            border: 2px solid #dbeafe;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            transition: all 0.3s ease;
+        }
+
+        .form-section:hover {
+            border-color: #2563eb;
+            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.1);
+        }
+
+        .section-title {
+            color: #1e40af;
+            border-bottom: 3px solid #2563eb;
+            padding-bottom: 12px;
+            margin-bottom: 25px;
+            font-size: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-icon {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-row.three-col {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+
+        .form-row.single {
+            grid-template-columns: 1fr;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .calculated-field {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border-color: #2563eb;
+            font-weight: 600;
+            color: #1e40af;
+        }
+
+        .error {
+            color: #1f2937;
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #374151;
+            font-weight: 500;
+            display: none;
+        }
+
+        .success {
+            color: #1e40af;
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2563eb;
+            font-weight: 500;
+            display: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            padding: 20px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: white;
+            padding: 18px 30px;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border: 2px solid #2563eb;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            color: #1e40af;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .info-icon {
+            font-size: 18px;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        .field-hint {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background: #f8f9fa;
+            border-top: 1px solid #e1e5e9;
+        }
+
+        .nav-link {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border: 2px solid #2563eb;
+            background: transparent;
+        }
+
+        .nav-link:hover {
+            background: #2563eb;
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 768px) {
+            .profile-container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+            
+            .profile-header {
+                padding: 30px 20px;
+            }
+            
+            .form-container {
+                padding: 30px 20px;
+            }
+            
+            .form-section {
+                padding: 20px;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .form-row.three-col {
+                grid-template-columns: 1fr;
+            }
+            
+            .navigation {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-left">
+            <div class="brand">
+                <span class="brand-icon">🧠</span>
+                <span class="brand-text">NeuroBridge</span>
+            </div>
+        </div>
+        <div class="nav-right">
+            <div class="nav-icons">
+                <div class="nav-icon" onclick="logout()" title="Logout">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16,17 21,12 16,7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="profile-container">
+        <div class="profile-header">
+            <div class="brand">
+                <span class="brand-icon">🧠</span>
+                <div>
+                    <h1>Complete Your Health Profile</h1>
+                    <p>Help us provide personalized AI-powered health insights</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="progress-indicator">
+            Step 1 of 1: Complete your comprehensive health profile
+        </div>
+        
+        <div class="form-container">
+            <div id="errorMessage" class="error"></div>
+            <div id="successMessage" class="success"></div>
+            <div id="loadingMessage" class="loading">Creating your profile...</div>
+            
+            <div class="info-box">
+                <span class="info-icon">💡</span>
+                All information is securely stored and used only to provide personalized health recommendations through our AI system.
+            </div>
+            
+            <form id="profileForm">
+                <!-- Personal Information -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <span class="section-icon">👤</span>
+                        Personal Information
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="first_name">First Name</label>
+                            <input type="text" id="first_name" name="first_name" required placeholder="Enter your first name">
+                        </div>
+                        <div class="form-group">
+                            <label for="last_name">Last Name</label>
+                            <input type="text" id="last_name" name="last_name" required placeholder="Enter your last name">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row three-col">
+                        <div class="form-group">
+                            <label for="age">Age</label>
+                            <input type="number" id="age" name="age" required min="1" max="120" placeholder="Enter your age">
+                        </div>
+                        <div class="form-group">
+                            <label for="gender">Gender</label>
+                            <select id="gender" name="gender" required>
+                                <option value="">Select your gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="blood_type">Blood Type</label>
+                            <select id="blood_type" name="blood_type">
+                                <option value="">Select blood type</option>
+                                <option value="A+">A+</option>
+                                <option value="A-">A-</option>
+                                <option value="B+">B+</option>
+                                <option value="B-">B-</option>
+                                <option value="AB+">AB+</option>
+                                <option value="AB-">AB-</option>
+                                <option value="O+">O+</option>
+                                <option value="O-">O-</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Physical Measurements -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <span class="section-icon">📏</span>
+                        Physical Measurements
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="height">Height (cm)</label>
+                            <input type="number" id="height" name="height" step="0.1" min="50" max="300" placeholder="Enter height in cm">
+                            <div class="field-hint">Example: 175.5 cm</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="weight">Weight (kg)</label>
+                            <input type="number" id="weight" name="weight" step="0.1" min="10" max="500" placeholder="Enter weight in kg">
+                            <div class="field-hint">Example: 70.5 kg</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="bmi">BMI (Auto-calculated)</label>
+                            <input type="number" id="bmi" name="bmi" step="0.1" readonly class="calculated-field" placeholder="Will be calculated automatically">
+                            <div class="field-hint">Body Mass Index calculated from height and weight</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="waist_circumference">Waist Circumference (cm)</label>
+                            <input type="number" id="waist_circumference" name="waist_circumference" step="0.1" placeholder="Optional">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Medical History -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <span class="section-icon">🏥</span>
+                        Medical History
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="family_history_stroke">Family History of Stroke</label>
+                            <select id="family_history_stroke" name="family_history_stroke">
+                                <option value="">Select option</option>
+                                <option value="yes">Yes</option>
+                                <option value="no">No</option>
+                                <option value="unknown">Unknown</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="family_history_heart_disease">Family History of Heart Disease</label>
+                            <select id="family_history_heart_disease" name="family_history_heart_disease">
+                                <option value="">Select option</option>
+                                <option value="yes">Yes</option>
+                                <option value="no">No</option>
+                                <option value="unknown">Unknown</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="medications">Current Medications</label>
+                        <textarea id="medications" name="medications" placeholder="List any medications you are currently taking (optional)"></textarea>
+                    </div>
+                </div>
+
+                <!-- Health Conditions -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <span class="section-icon">💊</span>
+                        Current Health Conditions
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="hypertension">Hypertension (High Blood Pressure)</label>
+                            <select id="hypertension" name="hypertension">
+                                <option value="no">No</option>
+                                <option value="yes">Yes</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="diabetes">Diabetes</label>
+                            <select id="diabetes" name="diabetes">
+                                <option value="no">No</option>
+                                <option value="yes">Yes</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="heart_disease">Heart Disease</label>
+                            <select id="heart_disease" name="heart_disease">
+                                <option value="no">No</option>
+                                <option value="yes">Yes</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="atrial_fibrillation">Atrial Fibrillation</label>
+                            <select id="atrial_fibrillation" name="atrial_fibrillation">
+                                <option value="no">No</option>
+                                <option value="yes">Yes</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lifestyle Information -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <span class="section-icon">🏃‍♂️</span>
+                        Lifestyle Information
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="smoking_status">Smoking Status</label>
+                            <select id="smoking_status" name="smoking_status">
+                                <option value="">Select status</option>
+                                <option value="never">Never smoked</option>
+                                <option value="former">Former smoker</option>
+                                <option value="current">Current smoker</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="alcohol_consumption">Alcohol Consumption</label>
+                            <select id="alcohol_consumption" name="alcohol_consumption">
+                                <option value="">Select frequency</option>
+                                <option value="none">None</option>
+                                <option value="occasional">Occasional (1-2 drinks/week)</option>
+                                <option value="moderate">Moderate (3-7 drinks/week)</option>
+                                <option value="heavy">Heavy (8+ drinks/week)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="exercise_frequency">Exercise Frequency</label>
+                            <select id="exercise_frequency" name="exercise_frequency">
+                                <option value="">Select frequency</option>
+                                <option value="none">None</option>
+                                <option value="1-2">1-2 times per week</option>
+                                <option value="3-4">3-4 times per week</option>
+                                <option value="5+">5+ times per week</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="stress_level">Stress Level (1-10)</label>
+                            <input type="number" id="stress_level" name="stress_level" min="1" max="10" placeholder="Rate 1 (low) to 10 (high)">
+                            <div class="field-hint">Rate your average daily stress level</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="sleep_hours">Sleep Hours per Night</label>
+                            <input type="number" id="sleep_hours" name="sleep_hours" step="0.5" min="1" max="16" placeholder="Average hours of sleep">
+                        </div>
+                        <div class="form-group">
+                            <label for="diet_type">Diet Type</label>
+                            <select id="diet_type" name="diet_type">
+                                <option value="">Select diet type</option>
+                                <option value="balanced">Balanced/Regular</option>
+                                <option value="vegetarian">Vegetarian</option>
+                                <option value="vegan">Vegan</option>
+                                <option value="mediterranean">Mediterranean</option>
+                                <option value="low_carb">Low Carb</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Information -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <span class="section-icon">📝</span>
+                        Additional Information
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="additional_notes">Additional Health Information</label>
+                        <textarea id="additional_notes" name="additional_notes" placeholder="Any other health information you'd like to share (optional)"></textarea>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn">Complete Profile & Access Dashboard</button>
+            </form>
+        </div>
+        
+        <div class="navigation">
+            <a href="/login" class="nav-link">← Back to Login</a>
+            <span style="color: #666; font-size: 14px;">All fields marked with * are required</span>
+        </div>
+    </div>
+
+    <script>
+        // Navigation function
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('access_token');
+                localStorage.removeItem('user_data');
+                window.location.href = '/login';
+            }
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            document.getElementById('successMessage').style.display = 'none';
+            document.getElementById('loadingMessage').style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('loadingMessage').style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showLoading() {
+            document.getElementById('loadingMessage').style.display = 'block';
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
+        }
+
+        // Auto-calculate BMI
+        function calculateBMI() {
+            const height = parseFloat(document.getElementById('height').value);
+            const weight = parseFloat(document.getElementById('weight').value);
+            
+            if (height && weight) {
+                const heightInMeters = height / 100;
+                const bmi = weight / (heightInMeters * heightInMeters);
+                document.getElementById('bmi').value = bmi.toFixed(1);
+            } else {
+                document.getElementById('bmi').value = '';
+            }
+        }
+
+        // Add event listeners for BMI calculation
+        document.getElementById('height').addEventListener('input', calculateBMI);
+        document.getElementById('weight').addEventListener('input', calculateBMI);
+
+        // Form submission
+        document.getElementById('profileForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            showLoading();
+            
+            const formData = new FormData(this);
+            const profileData = {};
+            
+            // Convert FormData to object
+            for (let [key, value] of formData.entries()) {
+                if (value !== '') {
+                    // Convert numeric fields
+                    if (['age', 'height', 'weight', 'bmi', 'waist_circumference', 'stress_level', 'sleep_hours'].includes(key)) {
+                        profileData[key] = parseFloat(value);
+                    }
+                    // Convert boolean fields
+                    else if (['hypertension', 'diabetes', 'heart_disease', 'atrial_fibrillation'].includes(key)) {
+                        profileData[key] = value === 'yes';
+                    }
+                    else {
+                        profileData[key] = value;
+                    }
+                }
+            }
+
+            // Validation
+            if (!profileData.first_name || !profileData.last_name || !profileData.age || !profileData.gender) {
+                showError('Please fill in all required fields (First Name, Last Name, Age, Gender).');
+                return;
+            }
+
+            if (profileData.age < 1 || profileData.age > 120) {
+                showError('Please enter a valid age between 1 and 120.');
+                return;
+            }
+
+            try {
+                const token = localStorage.getItem('access_token');
+                if (!token) {
+                    showError('Authentication token not found. Please login again.');
+                    setTimeout(() => {
+                        window.location.href = '/login';
+                    }, 2000);
+                    return;
+                }
+                
+                const response = await fetch('/api/profile/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(profileData)
+                });
+                
+                if (response.ok) {
+                    showSuccess('Profile created successfully! Redirecting to your dashboard...');
+                    setTimeout(() => {
+                        window.location.href = '/dashboard';
+                    }, 2000);
+                } else {
+                    const errorData = await response.json();
+                    if (response.status === 401) {
+                        showError('Authentication expired. Please login again.');
+                        setTimeout(() => {
+                            window.location.href = '/login';
+                        }, 2000);
+                    } else {
+                        showError(errorData.detail || 'Failed to create profile. Please try again.');
+                    }
+                }
+            } catch (error) {
+                showError('Network error. Please check your connection and try again.');
+            }
+        });
+
+        // Auto-focus on first field when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('first_name').focus();
+        });
+    </script>
+</body>
+</html>

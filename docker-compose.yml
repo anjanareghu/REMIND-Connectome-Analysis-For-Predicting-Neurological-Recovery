@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  fastapi-app:
+    build: .
+    container_name: fastapi-user-management
+    ports:
+      - "8000:8000"
+    volumes:
+      # Mount uploads directory to persist uploaded files
+      - ./uploads:/app/uploads
+      # Mount database file to persist data
+      - ./app.db:/app/app.db
+      # Mount templates directory for development
+      - ./templates:/app/templates
+      # Mount models directory for ML models
+      - ./models_predict:/app/models_predict
+      # Mount MRI scans directory
+      - ./mriscans:/app/mriscans
+    environment:
+      - PYTHONPATH=/app
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8000/docs')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Optional: Add a development service with hot reload
+  fastapi-dev:
+    build: .
+    container_name: fastapi-user-management-dev
+    ports:
+      - "8001:8000"
+    volumes:
+      # Mount entire project for development with hot reload
+      - .:/app
+    environment:
+      - PYTHONPATH=/app
+    command: ["python", "-m", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    restart: unless-stopped
+    profiles:
+      - dev
+
+networks:
+  default:
+    name: fastapi-network

@@ -1,0 +1,17 @@
+fastapi==0.115.0
+uvicorn[standard]==0.32.0
+sqlalchemy==2.0.23
+python-multipart==0.0.6
+passlib[bcrypt]==1.7.4
+bcrypt==4.1.2
+python-jose[cryptography]==3.3.0
+python-decouple==3.8
+google-generativeai==0.3.2
+httpx==0.25.2
+torch>=1.9.0
+torchvision>=0.10.0
+nibabel>=3.2.0
+numpy>=1.21.0
+Pillow>=8.3.0
+scikit-image>=0.18.0
+reportlab>=3.6.0

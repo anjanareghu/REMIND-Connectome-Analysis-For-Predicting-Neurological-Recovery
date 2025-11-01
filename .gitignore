@@ -1,0 +1,68 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Database
+*.db
+*.sqlite3
+*.db-shm
+*.db-wal
+
+# Uploads - exclude user uploaded files
+uploads/mri_scans/*
+uploads/profile_pictures/*
+!uploads/mri_scans/.gitkeep
+!uploads/profile_pictures/.gitkeep
+
+# MRI scans directory
+mriscans/*
+!mriscans/.gitkeep
+
+# Templates - keep these
+!templates/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Docker
+.dockerignore
+
+# Environment variables
+.env
+.env.local
+
+# Logs
+*.log
+
+# OS
+Thumbs.db

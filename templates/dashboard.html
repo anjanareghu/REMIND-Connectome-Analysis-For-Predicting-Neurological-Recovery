@@ -1,0 +1,2646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Dashboard - AI-Powered Stroke Prevention</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Navigation Bar Styles */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            color: white;
+            font-weight: 600;
+            font-size: 20px;
+        }
+
+        .brand-icon {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+
+        .brand-text {
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-icons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-icon:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 80px auto 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .dashboard-content {
+            padding: 30px;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            margin-right: 15px;
+        }
+
+        .health-advice .card-icon { background: #2563eb; }
+        .stroke-analysis .card-icon { background: #1e40af; }
+        .recovered-patients .card-icon { background: #1e3a8a; }
+        .statistics .card-icon { background: #374151; }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .card-content {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-top: 15px;
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+
+        .health-score {
+            font-size: 48px;
+            font-weight: bold;
+            color: #2563eb;
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .risk-level {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        .risk-low { background: #dbeafe; color: #1e40af; }
+        .risk-medium { background: #f3f4f6; color: #374151; }
+        .risk-high { background: #e5e7eb; color: #1f2937; }
+        .risk-unknown { background: #f59e0b; color: #ffffff; }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2563eb;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .content-area {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            display: none;
+        }
+
+        .content-area.active {
+            display: block;
+        }
+
+        .analysis-item {
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: box-shadow 0.3s;
+        }
+
+        .analysis-item:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        /* Enhanced Analysis Cards */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 15px;
+            border: 2px dashed #e5e7eb;
+            margin: 20px 0;
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            color: #374151;
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            color: #6b7280;
+            margin-bottom: 30px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .empty-state-actions {
+            margin-top: 20px;
+        }
+
+        .empty-state-actions .btn {
+            margin: 0 10px;
+        }
+
+        .analyses-summary {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .stat {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .stat-number {
+            display: block;
+            font-size: 28px;
+            font-weight: bold;
+            color: #1e40af;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .analysis-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s ease;
+        }
+
+        .analysis-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .analysis-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .analysis-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .analysis-title h4 {
+            margin: 0;
+            color: #1e293b;
+            font-size: 18px;
+        }
+
+        .analysis-status {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .analysis-status.pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .analysis-status.completed {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .analysis-status.reviewed {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .analysis-date {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .analysis-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .metric {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .metric-label {
+            display: block;
+            font-size: 12px;
+            color: #6b7280;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .confidence-bar {
+            position: relative;
+            background: #e5e7eb;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ef4444, #f59e0b, #10b981);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .confidence-text {
+            position: absolute;
+            top: -25px;
+            right: 0;
+            font-size: 12px;
+            font-weight: bold;
+            color: #374151;
+        }
+
+        .severity-badge {
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .metric-value {
+            color: #1e293b;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .analysis-details {
+            margin-bottom: 25px;
+        }
+
+        .detail-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f9fafb;
+            border-radius: 10px;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .detail-section h5 {
+            margin: 0 0 10px 0;
+            color: #1e293b;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .detail-section p {
+            margin: 0;
+            color: #4b5563;
+            line-height: 1.6;
+        }
+
+        .doctor-review {
+            background: #ecfdf5;
+            border-left-color: #10b981;
+        }
+
+        .reviewed-badge {
+            display: inline-block;
+            background: #d1fae5;
+            color: #065f46;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        /* Enhanced Clinical Display Styles */
+        .section-icon {
+            margin-right: 8px;
+            font-size: 16px;
+        }
+
+        .clinical-findings .detail-section {
+            border-left-color: #7c3aed;
+            background: #faf5ff;
+        }
+
+        .recommendations .detail-section {
+            border-left-color: #0ea5e9;
+            background: #f0f9ff;
+        }
+
+        .brain-regions .detail-section {
+            border-left-color: #f59e0b;
+            background: #fffbeb;
+        }
+
+        .findings-content, .recommendations-list {
+            margin-top: 10px;
+        }
+
+        .finding-header {
+            font-weight: 700;
+            color: #7c3aed;
+            margin: 12px 0 8px 0;
+            font-size: 14px;
+        }
+
+        .finding-item {
+            margin: 6px 0;
+            padding: 8px 12px;
+            background: white;
+            border-left: 3px solid #7c3aed;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .finding-bullet {
+            margin: 4px 0;
+            padding-left: 16px;
+            position: relative;
+            font-size: 14px;
+        }
+
+        .finding-bullet::before {
+            content: "•";
+            color: #7c3aed;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .finding-text {
+            margin: 8px 0;
+            line-height: 1.5;
+            color: #374151;
+            font-size: 14px;
+        }
+
+        .recommendation-item {
+            display: flex;
+            align-items: flex-start;
+            margin: 8px 0;
+            padding: 10px 12px;
+            background: white;
+            border-left: 3px solid #0ea5e9;
+            border-radius: 6px;
+        }
+
+        .rec-bullet {
+            color: #0ea5e9;
+            font-weight: bold;
+            margin-right: 8px;
+            margin-top: 2px;
+        }
+
+        .rec-text {
+            flex: 1;
+            line-height: 1.5;
+            color: #374151;
+            font-size: 14px;
+        }
+
+        .regions-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .region-tag {
+            background: white;
+            color: #d97706;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid #fed7aa;
+        }
+
+        .doctor-notes-content {
+            margin-top: 10px;
+        }
+
+        .doctor-note-text {
+            line-height: 1.6;
+            color: #374151;
+            font-size: 14px;
+        }
+
+        .doctor-note-text strong {
+            color: #10b981;
+            font-weight: 600;
+        }
+
+        .no-data {
+            color: #9ca3af;
+            font-style: italic;
+            margin: 0;
+        }
+
+        .analysis-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 13px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
+
+        .btn-warning {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #d97706;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            animation: slideIn 0.3s ease;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 25px;
+            border-bottom: 1px solid #e5e7eb;
+            background: #f8fafc;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            color: #1e293b;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #6b7280;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+
+        .close-btn:hover {
+            background: #e5e7eb;
+        }
+
+        .modal-body {
+            padding: 25px;
+        }
+
+        .modal-body h4 {
+            color: #1e293b;
+            margin: 20px 0 10px 0;
+            font-size: 16px;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 5px;
+        }
+
+        .modal-body h4:first-child {
+            margin-top: 0;
+        }
+
+        .modal-body p {
+            margin: 8px 0;
+            line-height: 1.6;
+            color: #4b5563;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Enhanced Modal for Detailed Report */
+        .modal-content.detailed-report {
+            max-width: 900px;
+            width: 90vw;
+        }
+
+        .modal-content.detailed-report .modal-body {
+            padding: 30px;
+        }
+
+        .report-section {
+            margin-bottom: 25px;
+            padding: 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background: #fafbfc;
+        }
+
+        .report-section h4 {
+            color: #1e293b;
+            margin: 0 0 15px 0;
+            font-size: 18px;
+            font-weight: 600;
+            border-bottom: 2px solid #3b82f6;
+            padding-bottom: 8px;
+        }
+
+        .info-grid, .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .findings-content, .regions-content, .doctor-notes-content {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #3b82f6;
+            line-height: 1.6;
+        }
+
+        .recommendations-section {
+            background: #f8f9fa !important;
+            border-left: 4px solid #dc3545 !important;
+        }
+
+        .recommendations-content {
+            background: white;
+            padding: 20px;
+            border-radius: 6px;
+            margin-top: 10px;
+        }
+
+        .recommendation-category {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            border-left: 3px solid #3b82f6;
+        }
+
+        .category-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin: 0 0 10px 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .recommendation-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .recommendation-item {
+            padding: 5px 0;
+            border-bottom: 1px dotted #e5e7eb;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .recommendation-item:before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: #3b82f6;
+            font-weight: bold;
+        }
+
+        .recommendation-item:last-child {
+            border-bottom: none;
+        }
+
+        .recommendation-text {
+            line-height: 1.5;
+            color: #4b5563;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .modal-actions .btn {
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            min-width: 200px;
+            justify-content: center;
+        }
+
+        .patient-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            background: #fafafa;
+        }
+
+        .recovery-bar {
+            background: #e0e0e0;
+            border-radius: 10px;
+            height: 8px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .recovery-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #2563eb, #3b82f6);
+            transition: width 0.3s;
+        }
+
+        .advice-section {
+            margin-bottom: 25px;
+        }
+
+        .advice-section h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .advice-list {
+            list-style: none;
+        }
+
+        .advice-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .advice-list li:before {
+            content: "✓";
+            color: #2563eb;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .dashboard-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            background: #f0f0f0;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .nav-btn.active {
+            background: #2563eb;
+            color: white;
+        }
+
+        .error {
+            color: #1f2937;
+            background: #f3f4f6;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+
+        /* Enhanced Patient Card Styles */
+        .patient-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s ease;
+        }
+
+        .patient-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .patient-header h4 {
+            color: #1f2937;
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .patient-meta {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .patient-meta span {
+            background: #f3f4f6;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #6b7280;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .info-item .label {
+            font-weight: 600;
+            color: #6b7280;
+        }
+
+        .info-item .value {
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 13px;
+        }
+
+        .stroke-type-ischemic { background: #dbeafe; color: #1e40af; }
+        .stroke-type-hemorrhagic { background: #fef3c7; color: #d97706; }
+        .stroke-type-tia { background: #ecfdf5; color: #059669; }
+
+        .severity-mild { background: #ecfdf5; color: #059669; }
+        .severity-moderate { background: #fef3c7; color: #d97706; }
+        .severity-severe { background: #fecaca; color: #dc2626; }
+
+        .recovery-section {
+            margin: 20px 0;
+        }
+
+        .recovery-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .recovery-header .label {
+            font-weight: 600;
+            color: #6b7280;
+        }
+
+        .recovery-header .percentage {
+            font-size: 20px;
+            font-weight: 700;
+            color: #059669;
+        }
+
+        .recovery-bar {
+            background: #f3f4f6;
+            height: 12px;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .recovery-fill {
+            background: linear-gradient(90deg, #10b981, #34d399);
+            height: 100%;
+            border-radius: 6px;
+            transition: width 0.8s ease;
+        }
+
+        .success-story {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 10px;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .story-text {
+            font-style: italic;
+            color: #374151;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .recovery-date {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 15px 0;
+            padding: 10px;
+            background: #f9fafb;
+            border-radius: 8px;
+        }
+
+        .recovery-date .label {
+            font-weight: 600;
+            color: #6b7280;
+        }
+
+        .recovery-date .date {
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .patient-actions {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .detailed-report-btn {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .detailed-report-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
+        }
+
+        .detailed-report-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            backdrop-filter: blur(5px);
+        }
+
+        .detailed-report-modal {
+            background: white;
+            border-radius: 20px;
+            max-width: 900px;
+            max-height: 90vh;
+            width: 90%;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            padding: 25px 30px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .close-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            font-size: 24px;
+            color: white;
+            cursor: pointer;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .modal-content {
+            padding: 30px;
+        }
+
+        .patient-summary {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 15px;
+        }
+
+        .patient-summary h3 {
+            margin: 0 0 15px 0;
+            color: #1f2937;
+            font-size: 20px;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .timeline-section {
+            margin-bottom: 30px;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #e5e7eb;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .timeline-marker {
+            position: absolute;
+            left: -25px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            background: #3b82f6;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 0 0 2px #3b82f6;
+        }
+
+        .timeline-content h5 {
+            margin: 0 0 5px 0;
+            color: #1f2937;
+            font-size: 16px;
+        }
+
+        .duration {
+            color: #6b7280;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .key-events {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        .key-events li {
+            margin: 5px 0;
+            color: #4b5563;
+        }
+
+        .inspiring-moments {
+            margin-bottom: 30px;
+        }
+
+        .moment-card {
+            background: #fef3c7;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .moment-card h5 {
+            margin: 0 0 10px 0;
+            color: #92400e;
+            font-size: 16px;
+        }
+
+        .emotional-impact {
+            color: #d97706;
+            font-style: italic;
+            font-size: 14px;
+        }
+
+        .recovery-tips {
+            margin-bottom: 30px;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .tip-card {
+            background: #f0f9ff;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #e0f2fe;
+        }
+
+        .tip-card h6 {
+            margin: 0 0 10px 0;
+            color: #0c4a6e;
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .message-section {
+            margin-bottom: 20px;
+        }
+
+        .inspiring-message {
+            background: #ecfdf5;
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 4px solid #10b981;
+            font-size: 18px;
+            font-style: italic;
+            color: #065f46;
+            margin: 15px 0;
+        }
+
+        .goals-list {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 12px;
+            list-style: none;
+        }
+
+        .goals-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #e5e7eb;
+            color: #374151;
+        }
+
+        .goals-list li:last-child {
+            border-bottom: none;
+        }
+
+        .goals-list li::before {
+            content: '🎯 ';
+            margin-right: 8px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: #f9fafb;
+            border-radius: 15px;
+            border: 2px dashed #d1d5db;
+        }
+
+        .empty-state h3 {
+            color: #6b7280;
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            color: #9ca3af;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-left">
+            <div class="brand">
+                <span class="brand-icon">🧠</span>
+                <span class="brand-text">NeuroBridge</span>
+            </div>
+        </div>
+        <div class="nav-right">
+            <div class="nav-icons">
+                <div class="nav-icon" onclick="redirectToProfile()" title="Edit Profile">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </div>
+                <div class="nav-icon" onclick="logout()" title="Logout">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16,17 21,12 16,7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        <div class="header">
+            <h1>🧠 AI-Powered Health Dashboard</h1>
+            <p>Your personalized stroke prevention and health management platform</p>
+        </div>
+        
+        <div class="dashboard-content">
+            <!-- Dashboard Overview Cards -->
+            <div class="dashboard-grid">
+                <!-- Health Summary Card -->
+                <div class="card health-summary">
+                    <div class="card-header">
+                        <div class="card-icon">❤️</div>
+                        <div class="card-title">Health Summary</div>
+                    </div>
+                    <div class="card-content">
+                        <div class="health-score" id="healthScore">--</div>
+                        <div class="risk-level" id="riskLevel">Loading...</div>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="stat-number" id="totalAnalyses">--</div>
+                                <div class="stat-label">Analyses</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number" id="recoveredCount">--</div>
+                                <div class="stat-label">Similar Stories</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI Health Advice Card -->
+                <div class="card health-advice">
+                    <div class="card-header">
+                        <div class="card-icon">🤖</div>
+                        <div class="card-title">AI Health Advice</div>
+                    </div>
+                    <div class="card-content">
+                        <p>Get personalized health recommendations powered by Google Gemini AI based on your profile and medical history.</p>
+                        <button class="btn" onclick="showHealthAdvice()">Get Personalized Advice</button>
+                        <button class="btn btn-secondary" onclick="getStrokeAdvice()">Stroke Prevention Tips</button>
+                    </div>
+                </div>
+
+                <!-- Stroke Analysis Card -->
+                <div class="card stroke-analysis">
+                    <div class="card-header">
+                        <div class="card-icon">🧠</div>
+                        <div class="card-title">AI Stroke Analysis</div>
+                    </div>
+                    <div class="card-content">
+                        <p>Upload MRI scans for AI-powered stroke detection and segmentation. Get comprehensive clinical reports with expert insights.</p>
+                        <button class="btn btn-secondary" onclick="showStrokeAnalyses()">View Analysis History</button>
+                        <button class="btn" onclick="redirectToStrokeAnalysis()">🧠 Start AI Analysis</button>
+                    </div>
+                </div>
+
+                <!-- Recovered Patients Card -->
+                <div class="card recovered-patients">
+                    <div class="card-header">
+                        <div class="card-icon">🌟</div>
+                        <div class="card-title">Success Stories</div>
+                    </div>
+                    <div class="card-content">
+                        <p>Discover personalized recovery stories from stroke survivors with similar conditions after completing your analysis.</p>
+                        <button class="btn btn-warning" onclick="showRecoveredPatients()">View Success Stories</button>
+                        <button class="btn" onclick="getRecoveryInsights()">Recovery Insights</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <div class="dashboard-nav">
+                <button class="nav-btn active" onclick="showDashboard()">Dashboard</button>
+                <button class="nav-btn" onclick="showHealthAdvice()">Health Advice</button>
+                <button class="nav-btn" onclick="showStrokeAnalyses()">Analysis History</button>
+                <button class="nav-btn" onclick="showRecoveredPatients()">Success Stories</button>
+                <button class="nav-btn" onclick="showStatistics()">Statistics</button>
+            </div>
+
+            <!-- Content Areas -->
+            <div id="dashboardContent" class="content-area active">
+                <h2>Welcome to Your Health Dashboard</h2>
+                <p>This AI-powered platform provides personalized health insights, stroke risk analysis, and recovery support. Use the cards above to navigate through different features.</p>
+            </div>
+
+            <div id="healthAdviceContent" class="content-area">
+                <h2>AI-Generated Health Advice</h2>
+                <div id="healthAdviceLoading" class="loading">Click "Get Personalized Advice" to generate recommendations...</div>
+                <div id="healthAdviceData" style="display: none;"></div>
+            </div>
+
+            <div id="strokeAnalysesContent" class="content-area">
+                <h2>Stroke Analysis History</h2>
+                <div id="strokeAnalysesLoading" class="loading">Loading your analysis history...</div>
+                <div id="strokeAnalysesData"></div>
+            </div>
+
+            <div id="recoveredPatientsContent" class="content-area">
+                <h2>Recovery Success Stories</h2>
+                <div id="recoveredPatientsLoading" class="loading">Loading success stories...</div>
+                <div id="recoveredPatientsData"></div>
+            </div>
+
+            <div id="statisticsContent" class="content-area">
+                <h2>Health Statistics</h2>
+                <div id="statisticsLoading" class="loading">Loading statistics...</div>
+                <div id="statisticsData"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+        let token = localStorage.getItem('access_token');
+
+        // Check if user is logged in
+        if (!token) {
+            alert('Please login first');
+            window.location.href = '/login';
+        }
+
+        // Navigation bar functions
+        function redirectToProfile() {
+            window.location.href = '/profile';
+        }
+
+        function redirectToStrokeAnalysis() {
+            window.location.href = '/stroke-analysis';
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('access_token');
+                localStorage.removeItem('user_data');
+                window.location.href = '/login';
+            }
+        }
+
+        // Navigation functions
+        function showDashboard() {
+            showContent('dashboardContent');
+            setActiveNav(0);
+        }
+
+        function showHealthAdvice() {
+            showContent('healthAdviceContent');
+            setActiveNav(1);
+        }
+
+        function showStrokeAnalyses() {
+            showContent('strokeAnalysesContent');
+            setActiveNav(2);
+            loadStrokeAnalyses();
+        }
+
+        function showRecoveredPatients() {
+            showContent('recoveredPatientsContent');
+            setActiveNav(3);
+            loadRecoveredPatients();
+        }
+
+        function showStatistics() {
+            showContent('statisticsContent');
+            setActiveNav(4);
+            loadStatistics();
+        }
+
+        function showContent(contentId) {
+            document.querySelectorAll('.content-area').forEach(area => {
+                area.classList.remove('active');
+            });
+            document.getElementById(contentId).classList.add('active');
+        }
+
+        function setActiveNav(index) {
+            document.querySelectorAll('.nav-btn').forEach((btn, i) => {
+                btn.classList.toggle('active', i === index);
+            });
+        }
+
+        // API functions
+        async function apiCall(endpoint, options = {}) {
+            try {
+                const response = await fetch(endpoint, {
+                    ...options,
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                        ...options.headers
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                return await response.json();
+            } catch (error) {
+                console.error('API call failed:', error);
+                throw error;
+            }
+        }
+
+        // Load dashboard summary
+        async function loadDashboardSummary() {
+            try {
+                // First try to get the summary data that includes total analyses count
+                let summaryData = null;
+                try {
+                    summaryData = await apiCall('/api/dashboard/summary');
+                } catch (summaryError) {
+                    console.log('Summary endpoint not available, calculating from analyses');
+                }
+                
+                // Get the user's stroke analyses for real risk data
+                const analyses = await apiCall('/api/dashboard/stroke-analyses');
+                
+                let healthScore = '--';
+                let riskLevel = 'unknown';
+                let totalAnalyses = analyses ? analyses.length : 0;
+                
+                console.log('Loaded analyses:', analyses);
+                
+                if (analyses && analyses.length > 0) {
+                    // Get the most recent analysis
+                    const latestAnalysis = analyses[0]; // Assuming they're sorted by date descending
+                    
+                    console.log('Latest analysis:', latestAnalysis);
+                    
+                    // Extract risk data from the latest analysis using actual database fields
+                    if (latestAnalysis) {
+                        // Use confidence_score as health score (0-100)
+                        healthScore = latestAnalysis.confidence_score || '--';
+                        
+                        // Map severity_level to risk_level
+                        const severityToRisk = {
+                            'low': 'low',
+                            'mild': 'low', 
+                            'medium': 'medium',
+                            'moderate': 'medium',
+                            'high': 'high',
+                            'severe': 'high',
+                            'critical': 'high'
+                        };
+                        
+                        riskLevel = severityToRisk[latestAnalysis.severity_level?.toLowerCase()] || 'medium';
+                        
+                        console.log(`Extracted data - Health Score: ${healthScore}, Risk Level: ${riskLevel}`);
+                    }
+                } else if (summaryData) {
+                    // Fallback to summary data if available and no analyses
+                    healthScore = summaryData.health_score || '--';
+                    riskLevel = summaryData.risk_level || 'unknown';
+                    totalAnalyses = summaryData.total_analyses || 0;
+                    console.log('Using summary data:', summaryData);
+                } else {
+                    // No analyses and no summary available
+                    console.log('No analyses found for user');
+                }
+                
+                // Update UI elements
+                if (healthScore === '--' || healthScore === null || healthScore === undefined) {
+                    document.getElementById('healthScore').textContent = '?';
+                    document.getElementById('healthScore').style.opacity = '0.5';
+                    document.getElementById('healthScore').title = 'Complete your first stroke analysis to see your health score';
+                } else {
+                    document.getElementById('healthScore').textContent = healthScore;
+                    document.getElementById('healthScore').style.opacity = '1';
+                    document.getElementById('healthScore').title = `Your health score: ${healthScore}/100`;
+                }
+                
+                const riskElement = document.getElementById('riskLevel');
+                if (riskLevel !== 'unknown') {
+                    riskElement.textContent = `${riskLevel.toUpperCase()} RISK`;
+                    riskElement.className = `risk-level risk-${riskLevel.toLowerCase()}`;
+                } else {
+                    riskElement.textContent = 'Complete Analysis';
+                    riskElement.className = 'risk-level risk-unknown';
+                }
+                
+                document.getElementById('totalAnalyses').textContent = totalAnalyses;
+                
+                // Calculate similar success stories based on user profile
+                await loadSimilarSuccessStoriesCount();
+                
+            } catch (error) {
+                console.error('Failed to load dashboard summary:', error);
+                // Fallback to default values
+                document.getElementById('healthScore').textContent = '?';
+                document.getElementById('riskLevel').textContent = 'Complete Analysis';
+                document.getElementById('totalAnalyses').textContent = '0';
+            }
+        }
+
+        // Load similar success stories count based on user profile
+        async function loadSimilarSuccessStoriesCount() {
+            try {
+                // Get user profile for similarity matching
+                const userProfile = await apiCall('/api/profile/me');
+                
+                // Use the same endpoint as the success stories section
+                const recoveredPatients = await apiCall('/api/dashboard/success-stories');
+                
+                if (!recoveredPatients || recoveredPatients.length === 0) {
+                    document.getElementById('recoveredCount').textContent = '0';
+                    return;
+                }
+                
+                console.log('User Profile:', userProfile);
+                console.log('Success Stories Data:', recoveredPatients);
+                
+                let similarCount = 0;
+                const userAge = userProfile.age || 0;
+                const userGender = userProfile.gender || '';
+                const userConditions = (userProfile.medical_conditions || '').toLowerCase();
+                
+                // Count similar patients based on demographics and conditions
+                recoveredPatients.forEach(patient => {
+                    let similarityScore = 0;
+                    
+                    // Age similarity (within 15 years gets 1 point) - more lenient
+                    if (patient.age && userAge > 0 && Math.abs(patient.age - userAge) <= 15) {
+                        similarityScore++;
+                    }
+                    
+                    // Gender similarity (1 point)
+                    if (patient.gender && userGender && patient.gender.toLowerCase() === userGender.toLowerCase()) {
+                        similarityScore++;
+                    }
+                    
+                    // Medical condition similarity (1 point for any matching condition)
+                    if (patient.medical_conditions && userConditions) {
+                        const patientConditions = patient.medical_conditions.toLowerCase();
+                        const commonConditions = ['stroke', 'hypertension', 'diabetes', 'heart', 'cardiac', 'cardiovascular'];
+                        
+                        for (const condition of commonConditions) {
+                            if (patientConditions.includes(condition) && userConditions.includes(condition)) {
+                                similarityScore++;
+                                break; // Only count once per patient
+                            }
+                        }
+                    }
+                    
+                    // More lenient: Consider similar if similarity score >= 1 OR if no profile data available
+                    if (similarityScore >= 1 || (!userAge && !userGender && !userConditions)) {
+                        similarCount++;
+                    }
+                    
+                    console.log(`Patient ${patient.patient_name || patient.id}: Age ${patient.age}, Gender ${patient.gender}, Conditions ${patient.medical_conditions}, Score: ${similarityScore}`);
+                });
+                
+                // If no similar patients found based on criteria, show the actual count of available stories
+                if (similarCount === 0 && recoveredPatients.length > 0) {
+                    similarCount = recoveredPatients.length;
+                    console.log('No similar patients found based on criteria, showing actual story count');
+                }
+                
+                console.log(`Final similar count: ${similarCount} out of ${recoveredPatients.length} total stories`);
+                
+                // The count should match exactly what's shown in success stories section
+                document.getElementById('recoveredCount').textContent = recoveredPatients.length;
+                
+                // Update the label to be more descriptive
+                const statLabel = document.querySelector('#recoveredCount').nextElementSibling;
+                if (statLabel) {
+                    statLabel.textContent = 'Success Stories';
+                }
+                
+            } catch (error) {
+                console.error('Failed to load similar success stories count:', error);
+                // Fallback to showing actual available stories from the same endpoint
+                try {
+                    const recoveredPatients = await apiCall('/api/dashboard/success-stories');
+                    const count = recoveredPatients ? recoveredPatients.length : 0;
+                    document.getElementById('recoveredCount').textContent = count;
+                } catch (fallbackError) {
+                    document.getElementById('recoveredCount').textContent = '0';
+                }
+            }
+        }
+
+        // Health advice functions
+        async function getHealthAdvice(focusArea = 'general') {
+            try {
+                document.getElementById('healthAdviceLoading').style.display = 'block';
+                document.getElementById('healthAdviceData').style.display = 'none';
+                
+                const advice = await apiCall('/api/dashboard/health-advice', {
+                    method: 'POST',
+                    body: JSON.stringify({ focus_area: focusArea })
+                });
+                
+                displayHealthAdvice(advice);
+                
+            } catch (error) {
+                document.getElementById('healthAdviceLoading').innerHTML = 
+                    '<div class="error">Failed to load health advice. Please ensure your profile is complete.</div>';
+            }
+        }
+
+        function displayHealthAdvice(advice) {
+            document.getElementById('healthAdviceLoading').style.display = 'none';
+            
+            const adviceHtml = `
+                <div class="advice-section">
+                    <h3>${advice.title}</h3>
+                    <p>${advice.content}</p>
+                </div>
+                
+                <div class="advice-section">
+                    <h3>Key Recommendations:</h3>
+                    <ul class="advice-list">
+                        ${advice.recommendations.map(rec => `<li>${rec}</li>`).join('')}
+                    </ul>
+                </div>
+                
+                <div class="advice-section">
+                    <h3>Risk Factors to Monitor:</h3>
+                    <ul class="advice-list">
+                        ${advice.risk_factors.map(risk => `<li>${risk}</li>`).join('')}
+                    </ul>
+                </div>
+                
+                <div class="advice-section">
+                    <h3>Lifestyle Tips:</h3>
+                    <ul class="advice-list">
+                        ${advice.lifestyle_tips.map(tip => `<li>${tip}</li>`).join('')}
+                    </ul>
+                </div>
+                
+                <p><small>Generated by AI on ${new Date(advice.generated_at).toLocaleString()}</small></p>
+            `;
+            
+            document.getElementById('healthAdviceData').innerHTML = adviceHtml;
+            document.getElementById('healthAdviceData').style.display = 'block';
+        }
+
+        // Stroke analysis functions
+        async function loadStrokeAnalyses() {
+            try {
+                document.getElementById('strokeAnalysesLoading').style.display = 'block';
+                
+                const analyses = await apiCall('/api/dashboard/stroke-analyses');
+                
+                displayStrokeAnalyses(analyses);
+                
+            } catch (error) {
+                document.getElementById('strokeAnalysesLoading').innerHTML = 
+                    '<div class="error">Failed to load stroke analyses.</div>';
+            }
+        }
+
+        // Helper functions for formatting clinical data
+        function formatAnalysisFindings(findings) {
+            if (!findings) return '<p class="no-data">No clinical findings available.</p>';
+            
+            // Try to parse structured findings
+            const sections = findings.split(/(?=\d+\.|\*\*|###|##)/);
+            if (sections.length > 1) {
+                return sections.map(section => {
+                    const trimmed = section.trim();
+                    if (trimmed.startsWith('**') || trimmed.startsWith('##')) {
+                        const header = trimmed.replace(/\*\*|##/g, '').trim();
+                        return `<div class="finding-header">${header}</div>`;
+                    } else if (/^\d+\./.test(trimmed)) {
+                        return `<div class="finding-item">${trimmed}</div>`;
+                    } else if (trimmed.startsWith('-') || trimmed.startsWith('•')) {
+                        return `<div class="finding-bullet">${trimmed}</div>`;
+                    } else if (trimmed) {
+                        return `<div class="finding-text">${trimmed}</div>`;
+                    }
+                }).filter(Boolean).join('');
+            }
+            
+            return `<div class="finding-text">${findings}</div>`;
+        }
+
+        function formatRecommendations(recommendations) {
+            if (!recommendations) return '<p class="no-data">No recommendations available.</p>';
+            
+            // Split into individual recommendations
+            const items = recommendations.split(/(?:\n|\.(?:\s|$)|\d+\.|\-|\•)/).filter(item => item.trim());
+            if (items.length > 1) {
+                return items.map(item => {
+                    const trimmed = item.trim();
+                    if (trimmed) {
+                        return `<div class="recommendation-item">
+                            <span class="rec-bullet">•</span>
+                            <span class="rec-text">${trimmed}</span>
+                        </div>`;
+                    }
+                }).filter(Boolean).join('');
+            }
+            
+            return `<div class="rec-text">${recommendations}</div>`;
+        }
+
+        function formatRecommendationsForModal(recommendations) {
+            if (!recommendations) return '<p class="no-data">No medical recommendations available.</p>';
+            
+            // Enhanced formatting for modal display with professional styling
+            let formatted = recommendations;
+            
+            // Split into sections based on common medical recommendation categories
+            const sections = [];
+            const lines = recommendations.split('\n').filter(line => line.trim());
+            
+            let currentSection = { title: '', items: [] };
+            
+            lines.forEach(line => {
+                line = line.trim();
+                if (!line) return;
+                
+                // Detect section headers
+                if (line.toUpperCase().includes('MEDICATION') || line.toUpperCase().includes('THERAPY')) {
+                    if (currentSection.items.length > 0) sections.push(currentSection);
+                    currentSection = { title: 'Medications & Therapy', items: [] };
+                } else if (line.toUpperCase().includes('REHABILITATION') || line.toUpperCase().includes('EXERCISE')) {
+                    if (currentSection.items.length > 0) sections.push(currentSection);
+                    currentSection = { title: 'Rehabilitation & Exercise', items: [] };
+                } else if (line.toUpperCase().includes('SPECIALIST') || line.toUpperCase().includes('CONSULTATION')) {
+                    if (currentSection.items.length > 0) sections.push(currentSection);
+                    currentSection = { title: 'Specialist Consultations', items: [] };
+                } else if (line.toUpperCase().includes('ADDITIONAL') || line.toUpperCase().includes('GENERAL')) {
+                    if (currentSection.items.length > 0) sections.push(currentSection);
+                    currentSection = { title: 'Additional Recommendations', items: [] };
+                } else {
+                    // Add item to current section
+                    if (line.startsWith('•') || line.startsWith('-') || line.startsWith('▸')) {
+                        currentSection.items.push(line.substring(1).trim());
+                    } else if (line && !line.includes(':')) {
+                        currentSection.items.push(line);
+                    }
+                }
+            });
+            
+            // Add the last section
+            if (currentSection.items.length > 0) sections.push(currentSection);
+            
+            // Generate HTML for sections
+            if (sections.length > 0) {
+                return sections.map(section => `
+                    <div class="recommendation-category">
+                        <h5 class="category-title">${section.title}</h5>
+                        <ul class="recommendation-list">
+                            ${section.items.map(item => `<li class="recommendation-item">${item}</li>`).join('')}
+                        </ul>
+                    </div>
+                `).join('');
+            }
+            
+            // Fallback to simple formatting
+            const items = recommendations.split(/(?:\n|\.(?:\s|$)|\d+\.|\-|\•)/).filter(item => item.trim());
+            if (items.length > 1) {
+                return `<ul class="recommendation-list">
+                    ${items.map(item => item.trim() ? `<li class="recommendation-item">${item.trim()}</li>` : '').filter(Boolean).join('')}
+                </ul>`;
+            }
+            
+            return `<div class="recommendation-text">${recommendations}</div>`;
+        }
+
+        function formatBrainRegions(regions) {
+            if (!regions) return '<span class="no-data">No specific regions identified.</span>';
+            
+            // Split regions into tags
+            const regionList = regions.split(/[,;]/).map(region => region.trim()).filter(Boolean);
+            if (regionList.length > 1) {
+                return regionList.map(region => 
+                    `<span class="region-tag">${region}</span>`
+                ).join('');
+            }
+            
+            return `<span class="region-tag">${regions}</span>`;
+        }
+
+        function formatDoctorNotes(notes) {
+            if (!notes) return '<p class="no-data">No doctor notes available.</p>';
+            
+            // Format doctor notes with emphasis on key medical terms
+            let formatted = notes.replace(/\b(recommend|urgent|immediate|follow-up|monitor|treatment)\b/gi, 
+                '<strong>$1</strong>');
+            
+            return `<div class="doctor-note-text">${formatted}</div>`;
+        }
+
+        function displayStrokeAnalyses(analyses) {
+            document.getElementById('strokeAnalysesLoading').style.display = 'none';
+            
+            if (analyses.length === 0) {
+                document.getElementById('strokeAnalysesData').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">🧠</div>
+                        <h3>No Previous Stroke Analyses</h3>
+                        <p>You haven't performed any stroke analyses yet. Upload an MRI scan to get started with AI-powered stroke detection and analysis.</p>
+                        <button class="btn" onclick="redirectToStrokeAnalysis()">🧠 Start Your First Analysis</button>
+                    </div>
+                `;
+                return;
+            }
+            
+            const analysesHtml = analyses.map((analysis, index) => {
+                const date = new Date(analysis.created_at);
+                const formattedDate = date.toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                
+                const severityColors = {
+                    'low': '#10b981',
+                    'medium': '#f59e0b', 
+                    'high': '#ef4444',
+                    'critical': '#dc2626'
+                };
+                
+                const statusIcons = {
+                    'pending': '⏳',
+                    'completed': '✅',
+                    'reviewed': '👨‍⚕️'
+                };
+                
+                return `
+                    <div class="analysis-card" data-analysis-id="${analysis.id}">
+                        <div class="analysis-header">
+                            <div class="analysis-title">
+                                <h4>🧠 ${analysis.analysis_type.replace(/_/g, ' ').toUpperCase()}</h4>
+                                <span class="analysis-status ${analysis.status}">
+                                    ${statusIcons[analysis.status] || '📊'} ${analysis.status.toUpperCase()}
+                                </span>
+                            </div>
+                            <div class="analysis-date">${formattedDate}</div>
+                        </div>
+                        
+                        <div class="analysis-metrics">
+                            <div class="metric">
+                                <span class="metric-label">Confidence Score</span>
+                                <div class="confidence-bar">
+                                    <div class="confidence-fill" style="width: ${analysis.confidence_score}%"></div>
+                                    <span class="confidence-text">${analysis.confidence_score}%</span>
+                                </div>
+                            </div>
+                            
+                            <div class="metric">
+                                <span class="metric-label">Severity Level</span>
+                                <span class="severity-badge" style="background-color: ${severityColors[analysis.severity_level]}">
+                                    ${analysis.severity_level.toUpperCase()}
+                                </span>
+                            </div>
+                            
+                            ${analysis.lesion_volume_ml ? `
+                            <div class="metric">
+                                <span class="metric-label">Lesion Volume</span>
+                                <span class="metric-value">${analysis.lesion_volume_ml} ml</span>
+                            </div>
+                            ` : ''}
+                        </div>
+                        
+                        <div class="analysis-details">
+                            <div class="detail-section clinical-findings">
+                                <h5><span class="section-icon">🔍</span>Clinical Findings</h5>
+                                <div class="findings-content">
+                                    ${formatAnalysisFindings(analysis.findings)}
+                                </div>
+                            </div>
+                            
+                            ${analysis.brain_regions_affected ? `
+                            <div class="detail-section brain-regions">
+                                <h5><span class="section-icon">🧠</span>Affected Brain Regions</h5>
+                                <div class="regions-tags">
+                                    ${formatBrainRegions(analysis.brain_regions_affected)}
+                                </div>
+                            </div>
+                            ` : ''}
+                            
+                            ${analysis.doctor_notes ? `
+                            <div class="detail-section doctor-review">
+                                <h5><span class="section-icon">👨‍⚕️</span>Doctor's Review</h5>
+                                <div class="doctor-notes-content">
+                                    ${formatDoctorNotes(analysis.doctor_notes)}
+                                </div>
+                                <span class="reviewed-badge">✅ Reviewed by Medical Professional</span>
+                            </div>
+                            ` : ''}
+                        </div>
+                        
+                        <div class="analysis-actions">
+                            <button class="btn-small btn-secondary" onclick="viewAnalysisDetails(${analysis.id})">
+                                📋 View Full Report
+                            </button>
+                            <button class="btn-small btn-primary" onclick="downloadAnalysisReport(${analysis.id})">
+                                📄 Download PDF
+                            </button>
+                            ${!analysis.reviewed_by_doctor ? `
+                            <button class="btn-small btn-warning" onclick="requestDoctorReview(${analysis.id})">
+                                👨‍⚕️ Request Review
+                            </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            const summaryHtml = `
+                <div class="analyses-summary">
+                    <h3>📊 Analysis Summary</h3>
+                    <div class="summary-stats">
+                        <div class="stat">
+                            <span class="stat-number">${analyses.length}</span>
+                            <span class="stat-label">Total Analyses</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">${analyses.filter(a => a.reviewed_by_doctor).length}</span>
+                            <span class="stat-label">Doctor Reviewed</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">${analyses.filter(a => a.severity_level === 'low').length}</span>
+                            <span class="stat-label">Low Risk</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">${analyses.filter(a => a.severity_level === 'high' || a.severity_level === 'critical').length}</span>
+                            <span class="stat-label">High Priority</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('strokeAnalysesData').innerHTML = summaryHtml + analysesHtml;
+        }
+
+        // Recovered patients functions
+        async function loadRecoveredPatients() {
+            try {
+                document.getElementById('recoveredPatientsLoading').style.display = 'block';
+                
+                const patients = await apiCall('/api/dashboard/success-stories');
+                
+                displayRecoveredPatients(patients);
+                
+            } catch (error) {
+                document.getElementById('recoveredPatientsLoading').innerHTML = 
+                    '<div class="error">Failed to load success stories data.</div>';
+            }
+        }
+
+        function displayRecoveredPatients(patients) {
+            document.getElementById('recoveredPatientsLoading').style.display = 'none';
+            
+            if (!patients || patients.length === 0) {
+                document.getElementById('recoveredPatientsData').innerHTML = `
+                    <div class="empty-state">
+                        <h3>🔒 Success Stories Unlocked After Analysis</h3>
+                        <p>Complete your first stroke analysis to discover inspiring recovery stories from patients with similar conditions to yours.</p>
+                        <div class="empty-state-actions">
+                            <button class="btn btn-primary" onclick="redirectToStrokeAnalysis()">
+                                🧠 Start Your First Analysis
+                            </button>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+            
+            const patientsHtml = patients.map(patient => `
+                <div class="patient-card">
+                    <div class="patient-header">
+                        <h4>${patient.patient_name}</h4>
+                        <div class="patient-meta">
+                            <span class="age">${patient.age} years old</span>
+                            <span class="gender">${patient.gender}</span>
+                            <span class="location">${patient.location}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stroke-info">
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="label">Stroke Type:</span>
+                                <span class="value stroke-type-${patient.stroke_type}">${patient.stroke_type.toUpperCase()}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Initial Severity:</span>
+                                <span class="value severity-${patient.initial_severity}">${patient.initial_severity.toUpperCase()}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Treatment Duration:</span>
+                                <span class="value">${patient.treatment_duration_days} days</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="recovery-section">
+                        <div class="recovery-header">
+                            <span class="label">Recovery Progress:</span>
+                            <span class="percentage">${patient.recovery_percentage}%</span>
+                        </div>
+                        <div class="recovery-bar">
+                            <div class="recovery-fill" style="width: ${patient.recovery_percentage}%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="success-story">
+                        <p class="story-text">${patient.success_story}</p>
+                    </div>
+                    
+                    <div class="recovery-date">
+                        <span class="label">Recovery Completed:</span>
+                        <span class="date">${new Date(patient.recovery_completed_date).toLocaleDateString()}</span>
+                    </div>
+                    
+                    <div class="patient-actions">
+                        <button class="btn btn-primary detailed-report-btn" onclick="showDetailedReport(${patient.id}, '${patient.patient_name}')">
+                            📋 See Full Recovery Report
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+            
+            document.getElementById('recoveredPatientsData').innerHTML = patientsHtml;
+        }
+
+        async function showDetailedReport(patientId, patientName) {
+            try {
+                // Show loading state
+                const button = event.target;
+                const originalText = button.innerHTML;
+                button.innerHTML = '⏳ Generating Report...';
+                button.disabled = true;
+                
+                // Fetch detailed report from Gemini
+                const report = await apiCall(`/api/dashboard/success-stories/${patientId}/detailed-report`);
+                
+                // Restore button
+                button.innerHTML = originalText;
+                button.disabled = false;
+                
+                // Display the detailed report in a modal
+                displayDetailedReportModal(report);
+                
+            } catch (error) {
+                console.error('Failed to load detailed report:', error);
+                alert('Failed to generate detailed recovery report. Please try again.');
+                
+                // Restore button
+                event.target.innerHTML = '📋 See Full Recovery Report';
+                event.target.disabled = false;
+            }
+        }
+
+        function displayDetailedReportModal(reportData) {
+            const { patient_info, detailed_report } = reportData;
+            
+            const modalHtml = `
+                <div class="modal-overlay" onclick="closeDetailedReportModal()">
+                    <div class="detailed-report-modal" onclick="event.stopPropagation()">
+                        <div class="modal-header">
+                            <h2>Complete Recovery Journey</h2>
+                            <button class="close-btn" onclick="closeDetailedReportModal()">×</button>
+                        </div>
+                        
+                        <div class="modal-content">
+                            <div class="patient-summary">
+                                <h3>${patient_info.name}'s Recovery Story</h3>
+                                <div class="summary-grid">
+                                    <div><strong>Age:</strong> ${patient_info.age}</div>
+                                    <div><strong>Stroke Type:</strong> ${patient_info.stroke_type}</div>
+                                    <div><strong>Recovery:</strong> ${patient_info.recovery_percentage}%</div>
+                                    <div><strong>Location:</strong> ${patient_info.location}</div>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline-section">
+                                <h4>Recovery Timeline</h4>
+                                <div class="timeline">
+                                    ${detailed_report.detailed_timeline.map(phase => `
+                                        <div class="timeline-item">
+                                            <div class="timeline-marker"></div>
+                                            <div class="timeline-content">
+                                                <h5>${phase.phase}</h5>
+                                                <span class="duration">${phase.duration}</span>
+                                                <p>${phase.description}</p>
+                                                <ul class="key-events">
+                                                    ${phase.key_events.map(event => `<li>${event}</li>`).join('')}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                            
+                            <div class="inspiring-moments">
+                                <h4>Inspiring Moments</h4>
+                                ${detailed_report.inspiring_moments.map(moment => `
+                                    <div class="moment-card">
+                                        <h5>${moment.milestone}</h5>
+                                        <p>${moment.description}</p>
+                                        <em class="emotional-impact">${moment.emotional_impact}</em>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            
+                            <div class="recovery-tips">
+                                <h4>Recovery Tips from ${patient_info.name}</h4>
+                                <div class="tips-grid">
+                                    ${detailed_report.recovery_tips.map(tip => `
+                                        <div class="tip-card">
+                                            <h6>${tip.category}</h6>
+                                            <p>${tip.tip}</p>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                            
+                            <div class="message-section">
+                                <h4>Message to Others</h4>
+                                <blockquote class="inspiring-message">
+                                    "${detailed_report.message_to_others}"
+                                </blockquote>
+                            </div>
+                            
+                            <div class="current-goals">
+                                <h4>Current Goals</h4>
+                                <ul class="goals-list">
+                                    ${detailed_report.current_goals.map(goal => `<li>${goal}</li>`).join('')}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+        }
+
+        function closeDetailedReportModal() {
+            const modal = document.querySelector('.modal-overlay');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        // Statistics functions
+        async function loadStatistics() {
+            try {
+                document.getElementById('statisticsLoading').style.display = 'block';
+                
+                const stats = await apiCall('/api/dashboard/statistics');
+                
+                displayStatistics(stats);
+                
+            } catch (error) {
+                document.getElementById('statisticsLoading').innerHTML = 
+                    '<div class="error">Failed to load statistics.</div>';
+            }
+        }
+
+        function displayStatistics(stats) {
+            document.getElementById('statisticsLoading').style.display = 'none';
+            
+            const statsHtml = `
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number">${stats.user_stats.total_analyses}</div>
+                        <div class="stat-label">Your Analyses</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">${stats.global_stats.total_recovered_patients}</div>
+                        <div class="stat-label">Total Recovered</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">${stats.global_stats.average_recovery_rate}%</div>
+                        <div class="stat-label">Avg Recovery Rate</div>
+                    </div>
+                </div>
+                
+                <h3>Recovery Rates by Severity</h3>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number">${stats.global_stats.recovery_by_severity.mild}%</div>
+                        <div class="stat-label">Mild Stroke</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">${stats.global_stats.recovery_by_severity.moderate}%</div>
+                        <div class="stat-label">Moderate Stroke</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">${stats.global_stats.recovery_by_severity.severe}%</div>
+                        <div class="stat-label">Severe Stroke</div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('statisticsData').innerHTML = statsHtml;
+        }
+
+        // Specific action functions
+        async function getStrokeAdvice() {
+            showHealthAdvice();
+            await getHealthAdvice('stroke_prevention');
+        }
+
+        async function getRiskAssessment() {
+            try {
+                const assessment = await apiCall('/api/dashboard/stroke-risk-assessment');
+                
+                alert(`Risk Assessment:\nRisk Level: ${assessment.risk_analysis.risk_level.toUpperCase()}\nRisk Score: ${assessment.risk_analysis.risk_score}/100\n\nView the Health Advice section for detailed recommendations.`);
+                
+            } catch (error) {
+                alert('Failed to get risk assessment. Please ensure your profile is complete.');
+            }
+        }
+
+        async function getRecoveryInsights() {
+            try {
+                const insights = await apiCall('/api/dashboard/recovery-insights');
+                
+                if (insights.message) {
+                    alert(insights.message + '\n' + insights.recommendation);
+                } else {
+                    alert(`Recovery Insights:\nTrend: ${insights.insights.trend.toUpperCase()}\n\n${insights.insights.progress_summary}`);
+                }
+                
+            } catch (error) {
+                alert('Failed to get recovery insights.');
+            }
+        }
+
+        // New analysis action functions
+        async function viewAnalysisDetails(analysisId) {
+            try {
+                const analysis = await apiCall(`/api/dashboard/stroke-analyses/${analysisId}`);
+                
+                // Create a detailed modal with full medical recommendations
+                const modalContent = `
+                    <div class="modal-overlay" onclick="closeModal()">
+                        <div class="modal-content detailed-report" onclick="event.stopPropagation()">
+                            <div class="modal-header">
+                                <h3>🧠 Detailed Analysis Report</h3>
+                                <button class="close-btn" onclick="closeModal()">×</button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="report-section">
+                                    <h4>Analysis Information</h4>
+                                    <div class="info-grid">
+                                        <p><strong>ID:</strong> ${analysis.id}</p>
+                                        <p><strong>Type:</strong> ${analysis.analysis_type.replace(/_/g, ' ').toUpperCase()}</p>
+                                        <p><strong>Date:</strong> ${new Date(analysis.created_at).toLocaleString()}</p>
+                                        <p><strong>Status:</strong> ${analysis.status.toUpperCase()}</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="report-section">
+                                    <h4>Clinical Results</h4>
+                                    <div class="results-grid">
+                                        <p><strong>Confidence Score:</strong> ${analysis.confidence_score}%</p>
+                                        <p><strong>Severity Level:</strong> ${analysis.severity_level.toUpperCase()}</p>
+                                        ${analysis.lesion_volume_ml ? `<p><strong>Lesion Volume:</strong> ${analysis.lesion_volume_ml} ml</p>` : ''}
+                                    </div>
+                                </div>
+                                
+                                <div class="report-section">
+                                    <h4>Detailed Findings</h4>
+                                    <div class="findings-content">
+                                        ${analysis.findings}
+                                    </div>
+                                </div>
+                                
+                                ${analysis.brain_regions_affected ? `
+                                <div class="report-section">
+                                    <h4>Affected Brain Regions</h4>
+                                    <div class="regions-content">
+                                        ${analysis.brain_regions_affected}
+                                    </div>
+                                </div>
+                                ` : ''}
+                                
+                                ${analysis.recommendations ? `
+                                <div class="report-section recommendations-section">
+                                    <h4>Medical Recommendations</h4>
+                                    <div class="recommendations-content">
+                                        ${formatRecommendationsForModal(analysis.recommendations)}
+                                    </div>
+                                </div>
+                                ` : ''}
+                                
+                                ${analysis.doctor_notes ? `
+                                <div class="report-section">
+                                    <h4>Doctor's Notes</h4>
+                                    <div class="doctor-notes-content">
+                                        ${analysis.doctor_notes}
+                                    </div>
+                                </div>
+                                ` : ''}
+                                
+                                <div class="modal-actions">
+                                    <button class="btn btn-primary" onclick="downloadAnalysisReport(${analysis.id})">
+                                        📄 Download Complete PDF Report
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.insertAdjacentHTML('beforeend', modalContent);
+                
+            } catch (error) {
+                console.error('Error loading analysis details:', error);
+                alert('Failed to load analysis details.');
+            }
+        }
+
+        function closeModal() {
+            const modal = document.querySelector('.modal-overlay');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        async function downloadAnalysisReport(analysisId) {
+            try {
+                // First fetch the full analysis data to include all details in the PDF
+                const analysis = await apiCall(`/api/dashboard/stroke-analyses/${analysisId}`);
+                
+                // Prepare comprehensive analysis data for PDF generation
+                const analysisResults = {
+                    patient_info: {
+                        id: analysis.id,
+                        analysis_type: analysis.analysis_type,
+                        created_at: analysis.created_at,
+                        status: analysis.status
+                    },
+                    stroke_detected: analysis.severity_level !== 'low',
+                    confidence: analysis.confidence_score,
+                    lesion_volume: analysis.lesion_volume_ml ? `${analysis.lesion_volume_ml} ml` : 'N/A',
+                    affected_regions: analysis.brain_regions_affected || 'No specific regions identified',
+                    ai_description: analysis.findings || 'Analysis findings are being processed',
+                    clinical_findings: analysis.findings || 'Clinical findings are being processed',
+                    recommendations: analysis.recommendations || 'Medical recommendations will be provided based on analysis results',
+                    processing_time: 'N/A',
+                    image_dimensions: 'N/A'
+                };
+
+                // Call the PDF generation endpoint with complete analysis data
+                const response = await fetch('/api/stroke-analysis/download-report', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ 
+                        analysis_id: analysisId.toString(),
+                        analysis_results: analysisResults
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to generate report');
+                }
+
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `stroke_analysis_complete_report_${analysisId}_${new Date().toISOString().split('T')[0]}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+                
+                // Show success message
+                alert('Complete PDF report with medical recommendations downloaded successfully!');
+                
+            } catch (error) {
+                console.error('Download error:', error);
+                alert('Failed to download analysis report. Please try again.');
+            }
+        }
+
+        async function requestDoctorReview(analysisId) {
+            try {
+                // This would be a new endpoint to request doctor review
+                const response = await fetch(`/api/dashboard/stroke-analyses/${analysisId}/request-review`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    alert('Doctor review requested successfully. You will be notified when the review is complete.');
+                    loadStrokeAnalyses(); // Refresh the list
+                } else {
+                    throw new Error('Failed to request review');
+                }
+                
+            } catch (error) {
+                alert('Failed to request doctor review. This feature may not be available yet.');
+            }
+        }
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            loadDashboardSummary();
+        });
+    </script>
+</body>
+</html>
