@@ -3,18 +3,27 @@ from jose import JWTError, jwt
 from datetime import datetime, timedelta
 from typing import Optional
 from fastapi import Depends, HTTPException, status
+
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from app.database.database import get_db
 from app.models.models import User
+import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # OAuth2 scheme
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
-# Security configuration
-SECRET_KEY = "your-secret-key-here-change-in-production"  # Change this in production
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+# Security configuration from environment
+SECRET_KEY = os.getenv("SECRET_KEY")
+if not SECRET_KEY:
+    print("WARNING: SECRET_KEY not set in environment. Set it in your .env file for production!")
+    SECRET_KEY = "insecure-default-key-change-me"  # fallback for dev only
+ALGORITHM = os.getenv("ALGORITHM", "HS256")
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "30"))
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto", bcrypt__rounds=12)
 
